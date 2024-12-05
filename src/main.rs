@@ -3,7 +3,7 @@
 
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
+use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy::winit::WinitWindows;
 use bevy::DefaultPlugins;
 use flappy_bird::GamePlugin;
@@ -12,7 +12,7 @@ use winit::window::Icon;
 
 fn main() {
     App::new()
-        .insert_resource(ClearColor(Color::linear_rgb(0.4, 0.4, 0.4)))
+        .insert_resource(ClearColor(Color::srgb(0.5, 0.7, 0.8)))
         .add_plugins(
             DefaultPlugins
                 .set(WindowPlugin {
@@ -23,6 +23,8 @@ fn main() {
                         fit_canvas_to_parent: true,
                         // Tells wasm not to override default event handling, like F5 and Ctrl+R
                         prevent_default_event_handling: false,
+                        position: WindowPosition::Centered(MonitorSelection::Primary),
+                        resolution: WindowResolution::new(512., 512.),
                         ..default()
                     }),
                     ..default()
@@ -30,7 +32,8 @@ fn main() {
                 .set(AssetPlugin {
                     meta_check: AssetMetaCheck::Never,
                     ..default()
-                }),
+                })
+                .set(ImagePlugin::default_nearest()),
         )
         .add_plugins(GamePlugin)
         .add_systems(Startup, set_window_icon)
